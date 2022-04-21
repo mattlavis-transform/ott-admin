@@ -1,0 +1,23 @@
+@media (min-width: 40.0625em) {
+    .govuk-table--m {
+
+        td,
+        tr {
+            font-size: 14px;
+        }
+
+    }
+}
+@media (max-width: 40.0625em) {
+    .govuk-table--m {
+
+        td,
+        tr {
+            font-size: 12px;
+        }
+
+    }
+}
+.nw {
+    white-space: nowrap;
+}

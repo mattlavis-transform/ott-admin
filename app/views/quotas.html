@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+    Quotas
+{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            <form action="/quota_results">
+            {{ govukInput({
+                label: {
+                    text: "Search for a quota order number",
+                    classes: "govuk-label--l",
+                    isPageHeading: true
+                },
+                hint: {
+                    text: "Enter the 6-digit quota order number ID to return the details of the quota's definitions, balance updates and other events."
+                },
+                id: "quota_order_number_id",
+                name: "quota_order_number_id"
+            }) }}
+
+            {{ govukButton({
+                text: "Search"
+            }) }}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+    Quota {{ context.quota_order_number_id }}
+{% endblock %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+    text: "Back",
+    href: "/quota_results?quota_order_number_id=" + context.quota_order_number_id
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l">Quota {{ context.quota_order_number_id }} - commodities and measures</h1>
+            <table class="govuk-table">
+                <caption class="govuk-table__caption govuk-table__caption--m">Core quota data</caption>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Quota order number</th>
+                        <td class="govuk-table__cell">{{ context.quota_order_number_id }}</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Origin(s)</th>
+                        <td class="govuk-table__cell">
+                            <ul class="govuk-list govuk-!-margin-bottom-0">
+                                {% for qono in context.quota_data.quota_order_number_origins %}
+                                    <li>
+                                        {{ qono.geographical_area_id }}
+                                        ({{ qono.description }})
+                                        from {{ qono.validity_start_date | format_date("D MMMM YYYY") }}
+                                        {% if qono.validity_end_date %}
+                                        to {{ qono.validity_end_date | format_date("D MMMM YYYY") }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Quota dates</th>
+                        <td class="govuk-table__cell">
+                            From {{ context.quota_data.validity_start_date | format_date("D MMMM YYYY") }}
+                            {% if context.quota_data.validity_end_date %}
+                                to {{ context.quota_data.validity_end_date | format_date("D MMMM YYYY") }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="govuk-table govuk-table--m">
+                <caption class="govuk-table__caption govuk-table__caption--m">Quota measures</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Commodity</th>
+                        <th scope="col" class="govuk-table__header">Description</th>
+                        <th scope="col" class="govuk-table__header">Measure type</th>
+                        <th scope="col" class="govuk-table__header">Geography</th>
+                        <th scope="col" class="govuk-table__header">From</th>
+                        <th scope="col" class="govuk-table__header">To</th>
+                        <th scope="col" class="govuk-table__header">In-quota duty</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    {% for m in context.quota_data.measures %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell"><a href="#">{{ m.goods_nomenclature_item_id }}</a></td>
+                        <td class="govuk-table__cell">{{ m.commodity_description | safe }}</td>
+                        <td class="govuk-table__cell" style="width:30%">{{ m.measure_type_description }}</td>
+                        <td class="govuk-table__cell">{{ m.geographical_area_id }}&nbsp;({{ m.geographical_area_description }})</td>
+                        <td class="govuk-table__cell nw">{{ m.validity_start_date | format_date("D MMM YYYY") }}</td>
+                        <td class="govuk-table__cell nw">{{ m.validity_end_date | format_date("D MMM YYYY") }}</td>
+                        <td class="govuk-table__cell">{{ m.duty }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% for m in context.quota_data.measures %}
+                
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
