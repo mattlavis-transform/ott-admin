@@ -19,9 +19,14 @@
                 <caption class="govuk-table__caption govuk-table__caption--m">Core quota data</caption>
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header">Quota order number</th>
-                        <td class="govuk-table__cell">{{ context.quota_order_number_id }}</td>
+                        <th scope="row" class="govuk-table__header" style="width:40%">Quota order number</th>
+                        <td class="govuk-table__cell" style="width:60%">{{ context.quota_order_number_id }}</td>
                     </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">Quota type</th>
+                        <td class="govuk-table__cell">{{ context.quota_data.quota_type }}</td>
+                    </tr>
+                    {% if context.quota_data.quota_type != "Licenced" %}
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Origin(s)</th>
                         <td class="govuk-table__cell">
@@ -43,26 +48,31 @@
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">Quota dates</th>
                         <td class="govuk-table__cell">
-                            From {{ context.quota_data.validity_start_date | format_date("D MMMM YYYY") }}
+                            {% if context.quota_data.validity_start_date %}
+                                From {{ context.quota_data.validity_start_date | format_date("D MMMM YYYY") }}
+                            {% endif %}
                             {% if context.quota_data.validity_end_date %}
                                 to {{ context.quota_data.validity_end_date | format_date("D MMMM YYYY") }}
                             {% endif %}
                         </td>
                     </tr>
+                    {% endif %}
                 </tbody>
             </table>
 
+            <h2 class="govuk-heading-m">Measures for quota {{ context.quota_order_number_id }}</h2>
+            <p><a href="">Extract <abbr title="Comma-separated values">CSV</abbr> of measures for quota {{ context.quota_order_number_id }}</a></p>
             <table class="govuk-table govuk-table--m">
-                <caption class="govuk-table__caption govuk-table__caption--m">Quota measures</caption>
+                {# <caption class="govuk-table__caption govuk-table__caption--m">Quota measures</caption> #}
                 <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
+                    <tr class="govuk-table__row sticky">
                         <th scope="col" class="govuk-table__header">Commodity</th>
                         <th scope="col" class="govuk-table__header">Description</th>
                         <th scope="col" class="govuk-table__header">Measure type</th>
                         <th scope="col" class="govuk-table__header">Geography</th>
                         <th scope="col" class="govuk-table__header">From</th>
                         <th scope="col" class="govuk-table__header">To</th>
-                        <th scope="col" class="govuk-table__header">In-quota duty</th>
+                        <th scope="col" class="govuk-table__header nw">In-quota duty</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -74,7 +84,7 @@
                         <td class="govuk-table__cell">{{ m.geographical_area_id }}&nbsp;({{ m.geographical_area_description }})</td>
                         <td class="govuk-table__cell nw">{{ m.validity_start_date | format_date("D MMM YYYY") }}</td>
                         <td class="govuk-table__cell nw">{{ m.validity_end_date | format_date("D MMM YYYY") }}</td>
-                        <td class="govuk-table__cell">{{ m.duty }}</td>
+                        <td class="govuk-table__cell nw">{{ m.duty }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

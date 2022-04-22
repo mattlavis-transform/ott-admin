@@ -20,11 +20,14 @@ router.get([
         context.quota_order_number_id = req.query["quota_order_number_id"];
         await context.get_quota_results();
 
-        var a = 1;
-
-        res.render('quota_results', {
-            'context': context
-        });
+        if (context.quota_data.quota_type == "Licenced") {
+            var url = "/quota_measures?quota_order_number_id=" + context.quota_order_number_id;
+            res.redirect(url);
+        } else {
+            res.render('quota_results', {
+                'context': context
+            });
+            }
     }));
 
 // Quota measures

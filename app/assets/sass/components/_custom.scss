@@ -3,21 +3,34 @@
 
         td,
         tr {
-            font-size: 14px;
+            font-size: 16px;
         }
 
     }
 }
+
 @media (max-width: 40.0625em) {
     .govuk-table--m {
 
         td,
         tr {
-            font-size: 12px;
+            font-size: 14px;
         }
 
     }
 }
+
 .nw {
     white-space: nowrap;
+}
+
+.sticky {
+    position        : -webkit-sticky;
+    position        : sticky;
+    top             : 0px;
+    background-color: #fff;
+}
+
+.c {
+    text-align: center;
 }

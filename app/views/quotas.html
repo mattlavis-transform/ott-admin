@@ -10,20 +10,34 @@
         <div class="govuk-grid-column-two-thirds">
 
             <form action="/quota_results">
-            {{ govukInput({
+                {# <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            <li>
+                                <a href="#quota_order_number_id">Enter a valid quota order number.</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div> #}
+                {{ govukInput({
                 label: {
                     text: "Search for a quota order number",
                     classes: "govuk-label--l",
                     isPageHeading: true
                 },
                 hint: {
-                    text: "Enter the 6-digit quota order number ID to return the details of the quota's definitions, balance updates and other events."
+                    text: "Enter the 6-digit quota order number to view the details of the quota's definitions, balance updates and other events. In the case of a licenced quota, you can see the measures that are associated with the order number."
                 },
                 id: "quota_order_number_id",
-                name: "quota_order_number_id"
+                name: "quota_order_number_id",
+                classes: "govuk-input--width-10",
+                xerrorMessage: {
+                    text: "Enter a valid quota order number."
+                }
             }) }}
 
-            {{ govukButton({
+                {{ govukButton({
                 text: "Search"
             }) }}
             </form>
