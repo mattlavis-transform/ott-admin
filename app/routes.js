@@ -54,7 +54,7 @@ router.get([
         var context = new Context(req);
         context.quota_order_number_id = req.query["quota_order_number_id"];
         context.quota_definition_sid = parseInt(req.query["quota_definition_sid"]);
-        await context.get_quota_results();
+        await context.get_quota_definition();
 
         var a = 1;
 

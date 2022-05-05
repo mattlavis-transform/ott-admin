@@ -34,3 +34,55 @@
 .c {
     text-align: center;
 }
+
+@media print {
+    .govuk-back-link {
+        display: none !important;
+        color  : #123456;
+    }
+
+    header {
+        display: none;
+    }
+
+    footer {
+        display: none;
+    }
+
+    .noprint {
+        display: none;
+    }
+}
+
+
+
+/* azeret-mono-regular - latin */
+@font-face {
+    font-family: 'Azeret Mono';
+    font-style : normal;
+    font-weight: 400;
+    src        : url('../fonts/azeret-mono-v6-latin-regular.eot');
+    /* IE9 Compat Modes */
+    src        : local(''),
+        url('../fonts/azeret-mono-v6-latin-regular.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('../fonts/azeret-mono-v6-latin-regular.woff2') format('woff2'),
+        /* Super Modern Browsers */
+        url('../fonts/azeret-mono-v6-latin-regular.woff') format('woff'),
+        /* Modern Browsers */
+        url('../fonts/azeret-mono-v6-latin-regular.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('../fonts/azeret-mono-v6-latin-regular.svg#AzeretMono') format('svg');
+    /* Legacy iOS */
+}
+
+
+.fixed {
+    font-family: 'Azeret Mono', 'Courier New', Courier, monospace;
+    font-size  : 15px !important;
+    // font-weight: bold
+}
+
+.r {
+    text-align: right;
+}

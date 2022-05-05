@@ -1,3 +1,6 @@
+var numeral = require('numeral');
+
+
 module.exports = function (env) {
     /**
      * Instantiate object used to store the methods registered as a
@@ -20,9 +23,9 @@ module.exports = function (env) {
     }
 
     filters.uk_numbers = function (str) {
-        internationalNumberFormat = new Intl.NumberFormat('en-GB');
-        s = internationalNumberFormat.format(str);
-        return s;
+        var fmt = "0,0.000";
+        var formatted_value = numeral(str).format(fmt);
+        return (formatted_value);
     }
 
     return filters

@@ -15,46 +15,81 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-l">Quota {{ context.quota_order_number_id }}</h1>
-            <p>Changes to quota balance for quota definition {{ context.quota_definition_sid }} running from 1 Jan 2022 to 30 June 2022.</p>
+            <p>
+                Changes to quota balance for quota definition {{ context.quota_definition_sid }}
+                running from {{ context.validity_start_date }} to {{ context.validity_end_date }}.
+            </p>
+            <p>Initial volume is {{ context.initial_volume }} {{ context.measurement_unit_code }}.</p>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/billboard.js/dist/billboard.min.css">
-
-            <!--Load D3.js -->
-            <script src="https://d3js.org/d3.v5.min.js"></script>
-
-            <!-- Load billboard.js via cdn -->
-            <script src="https://cdn.jsdelivr.net/npm/billboard.js/dist/billboard.min.js"></script>
-
-            <div id="chart"></div>
+            <canvas id="line-chart" width="800" height="450"></canvas>
             <script>
 
-                var chart = bb.generate({
-                    data: {
-                        x: "x",
-                        columns: [
-                            [
-                                "x", '01/12/2020', '11/01/2021', '01/02/2021', '01/03/2021'
-                            ],
-                            [
-                                "Quota balance", 100, 200, 400, 800
-                            ]
-                        ],
-                        colors: {
-                            "Quota balance": "#1d70b8"
-                        },
-                        type: "line",
-                        xFormat: "%d/%m/%Y"
-                    },
-                    axis: {
-                        x: {
-                            type: "timeseries",
-                            format: "%d/%m/%Y"
-                        }
-                    },
-                    bindto: "#chart"
-                });
-            </script>
+                getData();
 
+                async function getData() {
+                    const response = await fetch('http://127.0.0.1:5000/quota_definition/{{ context.quota_definition_sid }}');
+                    const data = await response.json();
+                    var quota_balance_events = data["quota_balance_events"];
+                    length = quota_balance_events.length;
+
+                    occurrence_timestamps = [];
+                    new_balances = [];
+                    imported_amounts = [];
+                    for (i = length - 1; i >= 0; i--) {
+                        var occurrence_timestamp = quota_balance_events[i].occurrence_timestamp.split("T")[0];
+                        {# occurrence_timestamps.push(quota_balance_events[i].occurrence_timestamp); #}
+                        occurrence_timestamps.push(occurrence_timestamp);
+                        new_balances.push(quota_balance_events[i].new_balance);
+                        imported_amounts.push(quota_balance_events[i].imported_amount);
+                    }
+
+                    new Chart(document.getElementById("line-chart"), {
+                        type: 'line',
+                        data: {
+                            labels: occurrence_timestamps,
+                            datasets: [
+                                {
+                                    label: "Imported amount ({{ context.measurement_unit_code }})",
+                                    fill: true,
+                                    backgroundColor: "rgba(204, 204, 204, 0.5)",
+                                    borderColor: "#ccc",
+                                    data: imported_amounts
+                                }, {
+                                    label: "Quota balance ({{ context.measurement_unit_code }})",
+                                    borderColor: "#1d70b8",
+                                    backgroundColor: "rgba(29, 112, 184, 0.1)",
+                                    fill: true,
+                                    data: new_balances
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: {
+                                display: true
+                            },
+                            title: {
+                                display: true,
+                                text: 'Quota balance updates'
+                            },
+                            scales: {
+                                yAxes: [
+                                    {
+                                        display: true,
+                                        ticks: {
+                                            userCallback: function (value, index, values) {
+                                                return value.toLocaleString(); // this is all we need
+                                            },
+                                            beginAtZero: true // minimum value will be 0.
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    });
+
+                }
+            </script>
         </div>
     </div>
 {% endblock %}
