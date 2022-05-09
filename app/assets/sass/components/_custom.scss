@@ -78,11 +78,16 @@
 
 
 .fixed {
-    font-family: 'Azeret Mono', 'Courier New', Courier, monospace;
-    font-size  : 15px !important;
+    font-family   : 'Azeret Mono', 'Courier New', Courier, monospace;
+    font-size     : 15px !important;
     // font-weight: bold
 }
 
 .r {
     text-align: right;
+}
+
+.exclusions {
+    display  : block;
+    font-size: 14px
 }

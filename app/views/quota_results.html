@@ -38,6 +38,15 @@
                                         {% if qono.validity_end_date %}
                                         to {{ qono.validity_end_date | format_date("D MMM YYYY") }}
                                         {% endif %}
+
+                                        {% if qono.exclusions | length > 0 %}
+                                         <span class="exclusions">excluding: 
+                                            {% for qonoe in qono.exclusions %}
+                                                {{ qonoe.description }} ({{ qonoe.geographical_area_id }})
+                                            {% endfor %}
+                                            </span>
+                                        {% endif %}
+
                                     </li>
                                 {% endfor %}
                             </ul>
