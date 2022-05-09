@@ -40,9 +40,9 @@
                                         {% endif %}
 
                                         {% if qono.exclusions | length > 0 %}
-                                         <span class="exclusions">excluding: 
+                                            <span class="exclusions">excluding: 
                                             {% for qonoe in qono.exclusions %}
-                                                {{ qonoe.description }} ({{ qonoe.geographical_area_id }})
+                                                    {{ qonoe.description }} ({{ qonoe.geographical_area_id }})
                                             {% endfor %}
                                             </span>
                                         {% endif %}
@@ -75,129 +75,145 @@
 
             {% if context.quota_data.quota_type != "Licenced" %}
                 <h2 class="govuk-heading-l">Definition periods for quota {{ context.quota_order_number_id }}</h2>
+                {% if context.show_future == 1 %}
+                    <p class="noprint">
+                        <a href="/quota_results?quota_order_number_id={{ context.quota_order_number_id }}&show_future=0">Hide future quota definition periods</a>
+                    </p>
+                {% else %}
+                    <p class="noprint">
+                        <a href="/quota_results?quota_order_number_id={{ context.quota_order_number_id }}&show_future=1">Show future quota definition periods</a>
+                    </p>
+                {% endif %}
+
                 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
                     {% set index = 0 %}
                     {% for qd in context.quota_data.quota_definitions %}
-                        <div class="govuk-accordion__section">
-                            <div class="govuk-accordion__section-header">
-                                <h2 class="govuk-accordion__section-heading">
-                                    <span class="govuk-accordion__section-button" id="accordion-default-heading-{{ index }}">
-                                        <!--Period: //-->{{ qd.validity_start_date | format_date("D MMM YYYY") }} to {{ qd.validity_end_date | format_date("D MMM YYYY") }} - Definition {{ qd.quota_definition_sid }}
-                                    </span>
-                                </h2>
-                            </div>
-                            <div id="accordion-default-content-{{ index }}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-{{ index }}">
-                                {# Start core data  #}
-                                <table class="govuk-table">
-                                    <caption class="govuk-table__caption govuk-table__caption--m">Core definition data</caption>
-                                    <tbody class="govuk-table__body">
-                                        <tr class="govuk-table__row">
-                                            <th scope="row" class="govuk-table__header">Definition ID</th>
-                                            <td class="govuk-table__cell">{{ qd.quota_definition_sid }}</td>
-                                        </tr>
-                                        <tr class="govuk-table__row">
-                                            <th scope="row" class="govuk-table__header">Start date</th>
-                                            <td class="govuk-table__cell">{{ qd.validity_start_date | format_date("D MMM YYYY") }}</td>
-                                        </tr>
-                                        <tr class="govuk-table__row">
-                                            <th scope="row" class="govuk-table__header">End date</th>
-                                            <td class="govuk-table__cell">{{ qd.validity_end_date | format_date("D MMM YYYY") }}</td>
-                                        </tr>
-                                        <tr class="govuk-table__row">
-                                            <th scope="row" class="govuk-table__header">Initial volume</th>
-                                            <td class="govuk-table__cell">{{ qd.initial_volume | uk_numbers }}
-                                                {{ qd.measurement_unit_code }}
-                                                {{ qd.measurement_unit_qualifier_code }}</td>
-                                        </tr>
-                                        <tr class="govuk-table__row">
-                                            <th scope="row" class="govuk-table__header">Critical state</th>
-                                            <td class="govuk-table__cell">{{ qd.critical_state }}</td>
-                                        </tr>
-                                        <tr class="govuk-table__row">
-                                            <th scope="row" class="govuk-table__header">Critical threshold</th>
-                                            <td class="govuk-table__cell">{{ qd.critical_threshold }}%</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                {# End core data  #}
-
-                                {# Start quota balance events  #}
-                                {% if qd.quota_balance_events | length > 0 %}
-                                    <h2 class="govuk-heading-m">Balance events for quota {{ context.quota_order_number_id }}</h2>
-
-                                    <div class="noprint">
-                                        <ul class="govuk-list">
-                                            <li>
-                                                <a href="">Extract <abbr title="Comma-separated values">CSV</abbr> of balance events for this period for quota {{ context.quota_order_number_id }}</a>
-                                            </li>
-                                            <li>
-                                                <a href="/quota_graph?quota_order_number_id={{ context.quota_order_number_id }}&quota_definition_sid={{ qd.quota_definition_sid }}">See graph of quota balance events</a>
-                                            </li>
-                                            <li>
-                                                <a target="_blank" href="https://www.trade-tariff.service.gov.uk/quota_search?order_number={{ context.quota_order_number_id }}#{{ qd.quota_definition_sid }}-order-number-{{ context.quota_order_number_id }}">See quota online</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <table class="govuk-table govuk-table--m">
-                                        {# <caption class="govuk-table__caption govuk-table__caption--m">Quota balance events</caption> #}
-                                        <thead class="govuk-table__head">
-                                            <tr class="govuk-table__row sticky">
-                                                <th scope="col" class="govuk-table__header">Event date</th>
-                                                <th scope="col" class="govuk-table__header">Last allocation date</th>
-                                                <th scope="col" class="govuk-table__header r">Old balance ({{ qd.measurement_unit_code }})</th>
-                                                <th scope="col" class="govuk-table__header r">New balance ({{ qd.measurement_unit_code }})</th>
-                                                <th scope="col" class="govuk-table__header r">Imported amount ({{ qd.measurement_unit_code }})</th>
-                                            </tr>
-                                        </thead>
+                        {% set show_definition = true %}
+                        {% if (context.show_future == 0) and (qd.validity_start_date | format_date("YYYY-MM-DD") > context.current_date | format_date("YYYY-MM-DD")) %}
+                            {% set show_definition = false %}
+                        {% endif %}
+                        {% if show_definition %}
+                            <div class="govuk-accordion__section">
+                                <div class="govuk-accordion__section-header">
+                                    <h2 class="govuk-accordion__section-heading">
+                                        <span class="govuk-accordion__section-button" id="accordion-default-heading-{{ index }}">
+                                            <!--Period: //-->{{ qd.validity_start_date | format_date("D MMM YYYY") }} to {{ qd.validity_end_date | format_date("D MMM YYYY") }} - Definition {{ qd.quota_definition_sid }}
+                                        </span>
+                                    </h2>
+                                </div>
+                                <div id="accordion-default-content-{{ index }}" class="govuk-accordion__section-content" aria-labelledby="accordion-default-heading-{{ index }}">
+                                    {# Start core data  #}
+                                    <table class="govuk-table">
+                                        <caption class="govuk-table__caption govuk-table__caption--m">Core definition data</caption>
                                         <tbody class="govuk-table__body">
-                                            {% for qbe in qd.quota_balance_events %}
-                                                <tr class="govuk-table__row">
-                                                    <td class="govuk-table__cell">{{ qbe.occurrence_timestamp | format_date("D MMM YYYY") }}</td>
-                                                    <td class="govuk-table__cell">{{ qbe.last_import_date_in_allocation | format_date("D MMM YYYY") }}</td>
-                                                    <td class="govuk-table__cell fixed r">{{ qbe.old_balance | uk_numbers }}</td>
-                                                    <td class="govuk-table__cell fixed r">{{ qbe.new_balance | uk_numbers }}</td>
-                                                    <td class="govuk-table__cell fixed r">{{ qbe.imported_amount | uk_numbers }}</td>
-                                                </tr>
-                                            {% endfor %}
+                                            <tr class="govuk-table__row">
+                                                <th scope="row" class="govuk-table__header">Definition ID</th>
+                                                <td class="govuk-table__cell">{{ qd.quota_definition_sid }}</td>
+                                            </tr>
+                                            <tr class="govuk-table__row">
+                                                <th scope="row" class="govuk-table__header">Start date</th>
+                                                <td class="govuk-table__cell">{{ qd.validity_start_date | format_date("D MMM YYYY") }}</td>
+                                            </tr>
+                                            <tr class="govuk-table__row">
+                                                <th scope="row" class="govuk-table__header">End date</th>
+                                                <td class="govuk-table__cell">{{ qd.validity_end_date | format_date("D MMM YYYY") }}</td>
+                                            </tr>
+                                            <tr class="govuk-table__row">
+                                                <th scope="row" class="govuk-table__header">Initial volume</th>
+                                                <td class="govuk-table__cell">{{ qd.initial_volume | uk_numbers }}
+                                                    {{ qd.measurement_unit_code }}
+                                                    {{ qd.measurement_unit_qualifier_code }}</td>
+                                            </tr>
+                                            <tr class="govuk-table__row">
+                                                <th scope="row" class="govuk-table__header">Critical state</th>
+                                                <td class="govuk-table__cell">{{ qd.critical_state }}</td>
+                                            </tr>
+                                            <tr class="govuk-table__row">
+                                                <th scope="row" class="govuk-table__header">Critical threshold</th>
+                                                <td class="govuk-table__cell">{{ qd.critical_threshold }}%</td>
+                                            </tr>
                                         </tbody>
                                     </table>
-                                {% else %}
-                                    <h2 class="govuk-heading-m">Quota balance events</h2>
-                                    <p>There are currently no events to display.</p>
-                                {% endif %}
-                                {# End quota balance events  #}
+                                    {# End core data  #}
 
-                                {# Start subsidiary events  #}
-                                <h2 class="govuk-heading-m">Additional events</h2>
-                                {% if qd.quota_subsidiary_events | length == 0 %}
-                                    <p>There are currently no events to display.</p>
-                                {% else %}
-                                    <p>The table below lists events of type critical, exhaustion, unblocking, unsuspension and re-opening.</p>
-                                    <table class="govuk-table govuk-table--m">
-                                        {# <caption class="govuk-table__caption govuk-table__caption--m">Additional events</caption> #}
-                                        <thead class="govuk-table__head">
-                                            <tr class="govuk-table__row sticky">
-                                                <th scope="col" class="govuk-table__header">Event date</th>
-                                                <th scope="col" class="govuk-table__header">Event type</th>
-                                                <th scope="col" class="govuk-table__header c">Updated state</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="govuk-table__body">
-                                            {% for qse in qd.quota_subsidiary_events %}
-                                                <tr class="govuk-table__row">
-                                                    <td class="govuk-table__cell">{{ qse.timestamp | format_date("D MMM YYYY") }}</td>
-                                                    <td class="govuk-table__cell">{{ qse.event_type }}</td>
-                                                    <td class="govuk-table__cell c">{{ qse.state }}</td>
+                                    {# Start quota balance events  #}
+                                    {% if qd.quota_balance_events | length > 0 %}
+                                        <h2 class="govuk-heading-m">Balance events for quota {{ context.quota_order_number_id }}</h2>
+
+                                        <div class="noprint">
+                                            <ul class="govuk-list">
+                                                <li>
+                                                    <a href="">Extract <abbr title="Comma-separated values">CSV</abbr> of balance events for this period for quota {{ context.quota_order_number_id }}</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/quota_graph?quota_order_number_id={{ context.quota_order_number_id }}&quota_definition_sid={{ qd.quota_definition_sid }}">See graph of quota balance events</a>
+                                                </li>
+                                                <li>
+                                                    <a target="_blank" href="https://www.trade-tariff.service.gov.uk/quota_search?order_number={{ context.quota_order_number_id }}#{{ qd.quota_definition_sid }}-order-number-{{ context.quota_order_number_id }}">See quota online</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <table class="govuk-table govuk-table--m">
+                                            {# <caption class="govuk-table__caption govuk-table__caption--m">Quota balance events</caption> #}
+                                            <thead class="govuk-table__head">
+                                                <tr class="govuk-table__row sticky">
+                                                    <th scope="col" class="govuk-table__header">Event date</th>
+                                                    <th scope="col" class="govuk-table__header">Last allocation date</th>
+                                                    <th scope="col" class="govuk-table__header r">Old balance ({{ qd.measurement_unit_code }})</th>
+                                                    <th scope="col" class="govuk-table__header r">New balance ({{ qd.measurement_unit_code }})</th>
+                                                    <th scope="col" class="govuk-table__header r">Imported amount ({{ qd.measurement_unit_code }})</th>
                                                 </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                {% endif %}
-                                {# End subsidiary events  #}
+                                            </thead>
+                                            <tbody class="govuk-table__body">
+                                                {% for qbe in qd.quota_balance_events %}
+                                                    <tr class="govuk-table__row">
+                                                        <td class="govuk-table__cell">{{ qbe.occurrence_timestamp | format_date("D MMM YYYY") }}</td>
+                                                        <td class="govuk-table__cell">{{ qbe.last_import_date_in_allocation | format_date("D MMM YYYY") }}</td>
+                                                        <td class="govuk-table__cell fixed r">{{ qbe.old_balance | uk_numbers }}</td>
+                                                        <td class="govuk-table__cell fixed r">{{ qbe.new_balance | uk_numbers }}</td>
+                                                        <td class="govuk-table__cell fixed r">{{ qbe.imported_amount | uk_numbers }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <h2 class="govuk-heading-m">Quota balance events</h2>
+                                        <p>There are currently no events to display.</p>
+                                    {% endif %}
+                                    {# End quota balance events  #}
 
+                                    {# Start subsidiary events  #}
+                                    <h2 class="govuk-heading-m">Additional events</h2>
+                                    {% if qd.quota_subsidiary_events | length == 0 %}
+                                        <p>There are currently no events to display.</p>
+                                    {% else %}
+                                        <p>The table below lists events of type critical, exhaustion, unblocking, unsuspension and re-opening.</p>
+                                        <table class="govuk-table govuk-table--m">
+                                            {# <caption class="govuk-table__caption govuk-table__caption--m">Additional events</caption> #}
+                                            <thead class="govuk-table__head">
+                                                <tr class="govuk-table__row sticky">
+                                                    <th scope="col" class="govuk-table__header">Event date</th>
+                                                    <th scope="col" class="govuk-table__header">Event type</th>
+                                                    <th scope="col" class="govuk-table__header c">Updated state</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="govuk-table__body">
+                                                {% for qse in qd.quota_subsidiary_events %}
+                                                    <tr class="govuk-table__row">
+                                                        <td class="govuk-table__cell">{{ qse.timestamp | format_date("D MMM YYYY") }}</td>
+                                                        <td class="govuk-table__cell">{{ qse.event_type }}</td>
+                                                        <td class="govuk-table__cell c">{{ qse.state }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% endif %}
+                                    {# End subsidiary events  #}
+
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
                     {% endfor %}
 
                 </div>

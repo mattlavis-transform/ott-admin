@@ -4,6 +4,12 @@ const axios = require('axios')
 class Context {
     constructor(req) {
         this.back_link = req.headers.referer;
+        this.show_future = req.query["show_future"];
+        this.current_date = new Date();
+        if (typeof this.show_future === 'undefined') {
+            this.show_future = 0;
+        }
+        var a = 1;
     }
 
     async get_quota_results() {
