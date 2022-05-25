@@ -84,10 +84,19 @@
 }
 
 .r {
-    text-align: right;
+    text-align   : right;
+    padding-right: 0.5em !important;
 }
 
 .exclusions {
     display  : block;
     font-size: 14px
+}
+
+.b {
+    font-weight: bold;
+}
+
+.grey {
+    background-color: #f0f0f0;
 }

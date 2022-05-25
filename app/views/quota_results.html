@@ -161,8 +161,8 @@
                                                     <th scope="col" class="govuk-table__header">Event date</th>
                                                     <th scope="col" class="govuk-table__header">Last allocation date</th>
                                                     <th scope="col" class="govuk-table__header r">Old balance ({{ qd.measurement_unit_code }})</th>
-                                                    <th scope="col" class="govuk-table__header r">New balance ({{ qd.measurement_unit_code }})</th>
                                                     <th scope="col" class="govuk-table__header r">Imported amount ({{ qd.measurement_unit_code }})</th>
+                                                    <th scope="col" class="govuk-table__header r b grey">New balance ({{ qd.measurement_unit_code }})</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="govuk-table__body">
@@ -171,8 +171,8 @@
                                                         <td class="govuk-table__cell">{{ qbe.occurrence_timestamp | format_date("D MMM YYYY") }}</td>
                                                         <td class="govuk-table__cell">{{ qbe.last_import_date_in_allocation | format_date("D MMM YYYY") }}</td>
                                                         <td class="govuk-table__cell fixed r">{{ qbe.old_balance | uk_numbers }}</td>
-                                                        <td class="govuk-table__cell fixed r">{{ qbe.new_balance | uk_numbers }}</td>
                                                         <td class="govuk-table__cell fixed r">{{ qbe.imported_amount | uk_numbers }}</td>
+                                                        <td class="govuk-table__cell fixed r b grey">{{ qbe.new_balance | uk_numbers }}</td>
                                                     </tr>
                                                 {% endfor %}
                                             </tbody>
