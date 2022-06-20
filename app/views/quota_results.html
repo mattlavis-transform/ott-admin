@@ -151,6 +151,11 @@
                                                 <li>
                                                     <a target="_blank" href="https://www.trade-tariff.service.gov.uk/quota_search?order_number={{ context.quota_order_number_id }}#{{ qd.quota_definition_sid }}-order-number-{{ context.quota_order_number_id }}">See quota online</a>
                                                 </li>
+                                                <li>
+                                                    <a target="_blank" href="https://www.trade-tariff.service.gov.uk/api/v2/quotas/search?order_number={{ context.quota_order_number_id }}">View API</a>
+                                                </li>
+
+                                                
                                             </ul>
                                         </div>
 
@@ -210,6 +215,36 @@
                                         </table>
                                     {% endif %}
                                     {# End subsidiary events  #}
+
+                                    {# Start periods  #}
+                                    <h2 class="govuk-heading-m">Suspension and blocking periods</h2>
+                                    {% if qd.quota_periods | length == 0 %}
+                                        <p>There are currently no suspension or blocking periods to display.</p>
+                                    {% else %}
+                                        <p>The table below lists events of type critical, exhaustion, unblocking, unsuspension and re-opening.</p>
+                                        <table class="govuk-table govuk-table--m">
+                                            {# <caption class="govuk-table__caption govuk-table__caption--m">Additional events</caption> #}
+                                            <thead class="govuk-table__head">
+                                                <tr class="govuk-table__row sticky">
+                                                    <th scope="col" class="govuk-table__header">Period type</th>
+                                                    <th scope="col" class="govuk-table__header">Start date</th>
+                                                    <th scope="col" class="govuk-table__header">End date</th>
+                                                    <th scope="col" class="govuk-table__header c">Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="govuk-table__body">
+                                                {% for qp in qd.quota_periods %}
+                                                    <tr class="govuk-table__row">
+                                                        <td class="govuk-table__cell">{{ qp.period_type }}</td>
+                                                        <td class="govuk-table__cell">{{ qp.start_date | format_date("D MMM YYYY") }}</td>
+                                                        <td class="govuk-table__cell">{{ qp.end_date | format_date("D MMM YYYY") }}</td>
+                                                        <td class="govuk-table__cell c">{{ qp.description }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% endif %}
+                                    {# End subsidiary periods  #}
 
                                 </div>
                             </div>
